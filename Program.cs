@@ -1,3 +1,4 @@
+using CaseManagementAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,15 @@ builder.Services.AddDbContext<CMSContext>(
     dbContextOptions => dbContextOptions
         .UseMySql(builder.Configuration.GetConnectionString("CMS"), new MySqlServerVersion(new Version(8, 0, 33)))
     );
+builder.Services.AddScoped<CaseRepository>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "allowAll",
+                      policy =>
+                      {
+                          policy.WithOrigins("*");
+                      });
+});
 
 var app = builder.Build();
 
@@ -23,6 +33,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
