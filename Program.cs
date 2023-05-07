@@ -14,12 +14,15 @@ builder.Services.AddDbContext<CMSContext>(
         .UseMySql(builder.Configuration.GetConnectionString("CMS"), new MySqlServerVersion(new Version(8, 0, 33)))
     );
 builder.Services.AddScoped<CaseRepository>();
+builder.Services.AddScoped<UserRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "allowAll",
                       policy =>
                       {
-                          policy.WithOrigins("*");
+                          policy.WithOrigins("*")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                       });
 });
 
