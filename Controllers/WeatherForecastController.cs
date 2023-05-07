@@ -36,9 +36,6 @@ public class WeatherForecastController : ControllerBase
     [HttpGet("test")]
     public async Task test()
     {
-        CmsUser[] users;
-        users = await _appContext.CmsUser.Where(x => x.Id <= 3).ToArrayAsync();
-        _appContext.CmsUser.RemoveRange(users);
-        await _appContext.SaveChangesAsync();
+        
     }
 }
