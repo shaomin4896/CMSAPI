@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CaseManagementAPI.Models;
 using CaseManagementAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CaseManagementAPI.Extensions;
 
 namespace CaseManagementAPI.Controllers
 {
@@ -13,10 +15,12 @@ namespace CaseManagementAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserRepository _userRepository;
+        private readonly JwtHelpers _jwtHelpers;
 
-        public UserController(UserRepository userRepository)
+        public UserController(UserRepository userRepository, JwtHelpers jwtHelpers)
         {
             _userRepository = userRepository;
+            _jwtHelpers = jwtHelpers;
         }
 
         [HttpPost("login")]
@@ -24,7 +28,7 @@ namespace CaseManagementAPI.Controllers
         {
             CmsUser? cmsUser = await _userRepository.GetUserByAccAndPwdAsync(account, password);
             if (cmsUser == null) return null;
-            return cmsUser.Name;           
+            return _jwtHelpers.GenerateToken(cmsUser);
         }
 
         [HttpPost("register")]
@@ -32,6 +36,13 @@ namespace CaseManagementAPI.Controllers
         {
             await _userRepository.CreateUserAsync(cmsUser);
             return cmsUser.Id;
+        }
+
+        [HttpGet("current")]
+        [Authorize]
+        public CmsUser? GetCurrentUser()
+        {
+            return User.Get();
         }
     }
 }

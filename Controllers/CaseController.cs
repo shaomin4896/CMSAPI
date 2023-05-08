@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CaseManagementAPI.Models;
 using CaseManagementAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CaseManagementAPI.Controllers
@@ -20,6 +21,7 @@ namespace CaseManagementAPI.Controllers
         }
 
         [HttpPost("new")]
+        [Authorize]
         public async Task<int> NewCase(CmsCase cmsCase)
         {
             await _caseRepository.AddCmsCase(cmsCase);
