@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CaseManagementAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CaseManagementAPI.Repository
 {
@@ -20,6 +21,19 @@ namespace CaseManagementAPI.Repository
             _appContext.Case.Add(cmsCase);
             await _appContext.SaveChangesAsync();
             return cmsCase.Id;
+        }
+
+        public async Task<CmsCase?> GetCmsCaseAsync(int id)
+        {
+            return await _appContext.Case
+            .Include(x => x.HealthHistories)
+            .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task AddHealthHistoryAsync(CmsCase cmsCase, HealthHistory healthHistory)
+        {
+            cmsCase.HealthHistories.Add(healthHistory);
+            await _appContext.SaveChangesAsync();
         }
     }
 }

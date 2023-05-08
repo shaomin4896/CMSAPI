@@ -33,5 +33,6 @@ namespace CaseManagementAPI.Models
         public List<EyeTest> EyeTests { get; set; }
         public List<FootTest> FootTests { get; set; }
         public List<UrineTest> UrineTests { get; set; }
+        public List<HealthHistory> HealthHistories { get; set; }
     }
 }

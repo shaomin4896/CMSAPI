@@ -44,5 +44,11 @@ namespace CaseManagementAPI.Controllers
         {
             return User.Get();
         }
+
+        [HttpGet("get")]
+        public async Task<CmsUser?> GetUserById(int id)
+        {
+            return await _userRepository.GetCmsUserAsync(id);
+        }
     }
 }

@@ -29,5 +29,10 @@ namespace CaseManagementAPI.Repository
             await _appContext.SaveChangesAsync();
             return user;
         }
+
+        public async Task<CmsUser?> GetCmsUserAsync(int id)
+        {
+            return await _appContext.CmsUser.FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

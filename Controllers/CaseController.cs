@@ -14,18 +14,28 @@ namespace CaseManagementAPI.Controllers
     public class CaseController : ControllerBase
     {
         private readonly CaseRepository _caseRepository;
+        private readonly UserRepository _userRepository;
 
-        public CaseController(CaseRepository caseRepository)
+        public CaseController(CaseRepository caseRepository, UserRepository userRepository)
         {
             _caseRepository = caseRepository;
+            _userRepository = userRepository;
         }
 
         [HttpPost("new")]
-        [Authorize]
         public async Task<int> NewCase(CmsCase cmsCase)
         {
             await _caseRepository.AddCmsCase(cmsCase);
             return cmsCase.Id;
+        }
+
+        [HttpPost("health")]
+        public async Task AddHealthHistory(int caseId , int managerId, HealthHistory healthHistory)
+        {
+            var manager = await _userRepository.GetCmsUserAsync(managerId);
+            healthHistory.Manager = manager;
+            var @case = await _caseRepository.GetCmsCaseAsync(caseId);
+            await _caseRepository.AddHealthHistoryAsync(@case, healthHistory);
         }
     }
 }
