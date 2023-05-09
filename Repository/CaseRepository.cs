@@ -27,12 +27,42 @@ namespace CaseManagementAPI.Repository
         {
             return await _appContext.Case
             .Include(x => x.HealthHistories)
+            .Include(x => x.EyeTests)
+            .Include(x => x.FootTests)
+            .Include(x => x.BloodTests)
+            .Include(x => x.UrineTests)
+            .Include(x => x.Manger)
+            .Include(x => x.Patient)
             .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task AddHealthHistoryAsync(CmsCase cmsCase, HealthHistory healthHistory)
         {
             cmsCase.HealthHistories.Add(healthHistory);
+            await _appContext.SaveChangesAsync();
+        }
+
+        public async Task AddEyeTest(CmsCase cmsCase, EyeTest eyeTest)
+        {
+            cmsCase.EyeTests.Add(eyeTest);
+            await _appContext.SaveChangesAsync();
+        }
+
+        public async Task AddFoodTest(CmsCase cmsCase, FootTest footTest)
+        {
+            cmsCase.FootTests.Add(footTest);
+            await _appContext.SaveChangesAsync();
+        }
+
+        public async Task AddUrineTest(CmsCase cmsCase, UrineTest urineTest)
+        {
+            cmsCase.UrineTests.Add(urineTest);
+            await _appContext.SaveChangesAsync();
+        }
+
+        public async Task AddBloodTest(CmsCase cmsCase, BloodTest bloodTest)
+        {
+            cmsCase.BloodTests.Add(bloodTest);
             await _appContext.SaveChangesAsync();
         }
     }

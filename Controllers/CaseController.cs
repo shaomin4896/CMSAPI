@@ -30,12 +30,40 @@ namespace CaseManagementAPI.Controllers
         }
 
         [HttpPost("health")]
-        public async Task AddHealthHistory(int caseId , int managerId, HealthHistory healthHistory)
+        public async Task AddHealthHistory(int caseId, int managerId, HealthHistory healthHistory)
         {
             var manager = await _userRepository.GetCmsUserAsync(managerId);
             healthHistory.Manager = manager;
             var @case = await _caseRepository.GetCmsCaseAsync(caseId);
             await _caseRepository.AddHealthHistoryAsync(@case, healthHistory);
+        }
+
+        [HttpPost("eyetest/{caseId}")]
+        public async Task AddEyeTest(int caseId, EyeTest eyeTest)
+        {
+            var @case = await _caseRepository.GetCmsCaseAsync(caseId);
+            await _caseRepository.AddEyeTest(@case, eyeTest);
+        }
+
+        [HttpPost("foottest/{caseId}")]
+        public async Task AddFootTest(int caseId, FootTest footTest)
+        {
+            var @case = await _caseRepository.GetCmsCaseAsync(caseId);
+            await _caseRepository.AddFoodTest(@case, footTest);
+        }
+
+        [HttpPost("urinetest/{caseId}")]
+        public async Task AddUrineTest(int caseId, UrineTest urineTest)
+        {
+            var @case = await _caseRepository.GetCmsCaseAsync(caseId);
+            await _caseRepository.AddUrineTest(@case, urineTest);
+        }
+
+        [HttpPost("bloodtest/{caseId}")]
+        public async Task AddBloodTest(int caseId, BloodTest bloodTest)
+        {
+            var @case = await _caseRepository.GetCmsCaseAsync(caseId);
+            await _caseRepository.AddBloodTest(@case, bloodTest);
         }
     }
 }
