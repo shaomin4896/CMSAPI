@@ -31,6 +31,13 @@ namespace CaseManagementAPI.Repository
             .Include(x => x.FootTests)
             .Include(x => x.BloodTests)
             .Include(x => x.UrineTests)
+            .Include(x => x.BloodPressureTests)
+            .Include(x => x.PatientSelfHistories)
+                .ThenInclude(x => x.BloodPressureTest)
+            .Include(x => x.PatientSelfHistories)
+                .ThenInclude(x => x.FootTest)
+            .Include(x => x.PatientSelfHistories)
+                .ThenInclude(x => x.BloodTest)
             .Include(x => x.Manger)
             .Include(x => x.Patient)
             .FirstOrDefaultAsync(x => x.Id == id);
@@ -63,6 +70,18 @@ namespace CaseManagementAPI.Repository
         public async Task AddBloodTest(CmsCase cmsCase, BloodTest bloodTest)
         {
             cmsCase.BloodTests.Add(bloodTest);
+            await _appContext.SaveChangesAsync();
+        }
+
+        public async Task AddBloodPressure(CmsCase cmsCase , BloodPressureTest bloodPressureTest)
+        {
+            cmsCase.BloodPressureTests.Add(bloodPressureTest);
+            await _appContext.SaveChangesAsync();
+        }
+
+        public async Task AddPatientSelfHistory(CmsCase cmsCase , PatientSelfHistory patientSelfHistory)
+        {
+            cmsCase.PatientSelfHistories.Add(patientSelfHistory);
             await _appContext.SaveChangesAsync();
         }
     }

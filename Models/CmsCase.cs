@@ -9,7 +9,7 @@ namespace CaseManagementAPI.Models
     {
         public int Id { get; set; }
         public int PatientId { get; set; }
-        public int PatientName { get; set; }
+        public string PatientName { get; set; }
         public bool IsMale { get; set; }
         public string CustomerId { get; set; }
         public DateTime Birthday { get; set; }
@@ -29,10 +29,12 @@ namespace CaseManagementAPI.Models
         public string Contactor { get; set; }
         public CmsUser Manger { get; set; }
         public CmsUser Patient { get; set; }
-        public List<BloodTest> BloodTests { get; set; }
-        public List<EyeTest> EyeTests { get; set; }
-        public List<FootTest> FootTests { get; set; }
-        public List<UrineTest> UrineTests { get; set; }
-        public List<HealthHistory> HealthHistories { get; set; }
+        public List<BloodTest>? BloodTests { get; set; }
+        public List<EyeTest>? EyeTests { get; set; }
+        public List<FootTest>? FootTests { get; set; }
+        public List<UrineTest>? UrineTests { get; set; }
+        public List<HealthHistory>? HealthHistories { get; set; }
+        public List<BloodPressureTest>? BloodPressureTests { get; set; }
+        public List<PatientSelfHistory>? PatientSelfHistories { get; set; }
     }
 }

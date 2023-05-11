@@ -15,5 +15,7 @@ public class CMSContext : DbContext
     public DbSet<EyeTest> EyeTest { get; set; }
     public DbSet<FootTest> FootTest { get; set; }
     public DbSet<UrineTest> UrineTest { get; set; }
+    public DbSet<BloodPressureTest> BloodPressureTest { get; set; }
+    public DbSet<PatientSelfHistory> PatientSelfHistory { get; set; }
 }
 

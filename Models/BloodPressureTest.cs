@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace CaseManagementAPI.Models
 {
-    public class FootTest
+    public class BloodPressureTest
     {
         public int Id { get; set; }
-        public DateTime TestDate { get; set; }
-        public bool IsLeftNormal { get; set; }
-        public bool IsRightNormal { get; set; }
+        public double Systolic { get; set; }
+        public double Diastolic { get; set; }
     }
 }

@@ -25,6 +25,8 @@ namespace CaseManagementAPI.Controllers
         [HttpPost("new")]
         public async Task<int> NewCase(CmsCase cmsCase)
         {
+            var manger = await _userRepository.GetCmsUserByNameAsync(cmsCase.Manger.Name);
+            cmsCase.Manger = manger;
             await _caseRepository.AddCmsCase(cmsCase);
             return cmsCase.Id;
         }
@@ -64,6 +66,20 @@ namespace CaseManagementAPI.Controllers
         {
             var @case = await _caseRepository.GetCmsCaseAsync(caseId);
             await _caseRepository.AddBloodTest(@case, bloodTest);
+        }
+
+        [HttpPost("bloodPressure/{caseId}")]
+        public async Task AddBloodPressure(int caseId, BloodPressureTest bloodPressureTest)
+        {
+            var @case = await _caseRepository.GetCmsCaseAsync(caseId);
+            await _caseRepository.AddBloodPressure(@case, bloodPressureTest);
+        }
+
+        [HttpPost("patientSelf/{caseId}")]
+        public async Task AddPatientSelf(int caseId, PatientSelfHistory patientSelfHistory)
+        {
+            var @case = await _caseRepository.GetCmsCaseAsync(caseId);
+            await _caseRepository.AddPatientSelfHistory(@case, patientSelfHistory);
         }
     }
 }
