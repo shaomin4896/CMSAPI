@@ -31,7 +31,14 @@ namespace CaseManagementAPI.Controllers
             return cmsCase.Id;
         }
 
-        [HttpPost("health")]
+        [HttpGet("{caseId}")]
+        public async Task<CmsCase?> GetCaseByIdAsync(int caseId)
+        {
+            var @case = await _caseRepository.GetCmsCaseAsync(caseId);
+            return @case;
+        }
+
+        [HttpPost("health/{caseId}/{managerId}")]
         public async Task AddHealthHistory(int caseId, int managerId, HealthHistory healthHistory)
         {
             var manager = await _userRepository.GetCmsUserAsync(managerId);
