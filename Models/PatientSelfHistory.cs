@@ -8,7 +8,6 @@ namespace CaseManagementAPI.Models
     public class PatientSelfHistory
     {
         public int Id { get; set; }
-        public DateTime TestDate { get; set; }
         public double Height { get; set; }
         public double Weight { get; set; }
         public string MedicineRecord { get; set; }

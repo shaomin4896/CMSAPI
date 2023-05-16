@@ -8,6 +8,7 @@ namespace CaseManagementAPI.Models
     public class BloodPressureTest
     {
         public int Id { get; set; }
+        public DateTime TestDate { get; set; }
         public double Systolic { get; set; }
         public double Diastolic { get; set; }
     }
