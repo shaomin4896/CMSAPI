@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CaseManagementAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,28 @@ namespace CaseManagementAPI.Repository
             .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<List<CmsCase>> GetCasesByConditions(IEnumerable<Expression<Func<CmsCase, bool>>> conditions)
+        {
+            IQueryable<CmsCase> query = _appContext.Case
+            .Include(x => x.HealthHistories)
+            .Include(x => x.EyeTests)
+            .Include(x => x.FootTests)
+            .Include(x => x.BloodTests)
+            .Include(x => x.UrineTests)
+            .Include(x => x.BloodPressureTests)
+            .Include(x => x.PatientSelfHistories)
+                .ThenInclude(x => x.BloodPressureTest)
+            .Include(x => x.PatientSelfHistories)
+                .ThenInclude(x => x.FootTest)
+            .Include(x => x.PatientSelfHistories)
+                .ThenInclude(x => x.BloodTest)
+            .AsQueryable();
+
+            foreach (Expression<Func<CmsCase, bool>> filter in conditions)
+                query = query.Where(filter);
+            return await query.ToListAsync();
+        }
+
         public async Task AddHealthHistoryAsync(CmsCase cmsCase, HealthHistory healthHistory)
         {
             cmsCase.HealthHistories.Add(healthHistory);
@@ -73,16 +96,21 @@ namespace CaseManagementAPI.Repository
             await _appContext.SaveChangesAsync();
         }
 
-        public async Task AddBloodPressure(CmsCase cmsCase , BloodPressureTest bloodPressureTest)
+        public async Task AddBloodPressure(CmsCase cmsCase, BloodPressureTest bloodPressureTest)
         {
             cmsCase.BloodPressureTests.Add(bloodPressureTest);
             await _appContext.SaveChangesAsync();
         }
 
-        public async Task AddPatientSelfHistory(CmsCase cmsCase , PatientSelfHistory patientSelfHistory)
+        public async Task AddPatientSelfHistory(CmsCase cmsCase, PatientSelfHistory patientSelfHistory)
         {
             cmsCase.PatientSelfHistories.Add(patientSelfHistory);
             await _appContext.SaveChangesAsync();
+        }
+
+        public async Task<CmsCase?> GetCaseByPatientId(int id)
+        {
+            return await _appContext.Case.FirstOrDefaultAsync(x => x.PatientId == id);
         }
     }
 }

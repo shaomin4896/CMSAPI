@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CaseManagementAPI.Models;
 using CaseManagementAPI.Repository;
+using CaseManagementApp.Models.ControlItems;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -87,6 +89,41 @@ namespace CaseManagementAPI.Controllers
         {
             var @case = await _caseRepository.GetCmsCaseAsync(caseId);
             await _caseRepository.AddPatientSelfHistory(@case, patientSelfHistory);
+        }
+
+        [HttpPost("query")]
+        public async Task<List<CmsCase>> QueryCase(QueryPayload queryPayload)
+        {
+            List<Expression<Func<CmsCase, bool>>> conditions = new List<Expression<Func<CmsCase, bool>>>();
+            if (queryPayload.CaseId != null)
+                conditions.Add(x => x.Id == queryPayload.CaseId);
+            if (queryPayload.PatientName != null)
+                conditions.Add(x => x.PatientName == queryPayload.PatientName);
+            if (queryPayload.CustomerId != null)
+                conditions.Add(x => x.CustomerId == queryPayload.CustomerId);
+            if (queryPayload.TestDate != null)
+            {
+                conditions.Add((x) => 
+                    x.EyeTests.Any(t => t.TestDate.Date == queryPayload.TestDate) ||
+                    x.FootTests.Any(t => t.TestDate.Date == queryPayload.TestDate) ||
+                    x.BloodTests.Any(t => t.TestDate.Date == queryPayload.TestDate) ||
+                    x.UrineTests.Any(t => t.TestDate.Date == queryPayload.TestDate) ||
+                    x.BloodPressureTests.Any(t => t.TestDate.Date == queryPayload.TestDate) ||
+                    x.PatientSelfHistories.Any(p => p.FootTest.TestDate.Date == queryPayload.TestDate) ||
+                    x.PatientSelfHistories.Any(p => p.BloodTest.TestDate.Date == queryPayload.TestDate) ||
+                    x.PatientSelfHistories.Any(p => p.BloodPressureTest.TestDate.Date == queryPayload.TestDate) ||
+                    x.HealthHistories.Any(h => h.TraceDate.Date == queryPayload.TestDate)
+                );
+            }
+
+            var res = await _caseRepository.GetCasesByConditions(conditions);
+            return res;
+        }
+
+        [HttpGet("patientCase/{patientId}")]
+        public async Task<CmsCase> GetCmsCaseByPatientIdAsync(int patientId)
+        {
+            return await _caseRepository.GetCaseByPatientId(patientId);
         }
     }
 }
